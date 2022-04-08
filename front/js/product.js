@@ -13,7 +13,8 @@ const couleur = document.querySelector("#colors");
 const quantite = document.querySelector("#quantity");
 const title = document.querySelector("#title");
 const price = document.querySelector("#price");
-const img = document.querySelectorAll(".item__img");
+let imgSrc = document.querySelectorAll(".item__img");
+let imgAlt = document.querySelectorAll(".item__img");
 const description = document.querySelector("#description");
 
 productArticle();
@@ -54,6 +55,9 @@ function insertProduct(article) {
     productImage.src = article.imageUrl;
     productImage.alt = article.altTxt;
 
+    imgSrc = article.imageUrl;
+    imgAlt = article.altTxt;
+
     // Ajout du titre .
     let productName = document.getElementById('title');
     productName.innerHTML = article.name;
@@ -93,8 +97,8 @@ function addToCart() {
             nomProduit : title.innerHTML,
             prixProduit : price.innerHTML,
             descriptionProduit : description.innerHTML,
-            imageProduit : img.src,
-            altImageProduit : img.alt,
+            imageProduit : imgSrc,
+            altImageProduit : imgAlt,
         };
 
         let produitLocalStorage =[];
