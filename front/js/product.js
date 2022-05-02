@@ -5,7 +5,6 @@ var str = window.location.href;
 const url = new URL(str);
 
 const productId = url.searchParams.get("id");
-console.log(productId);
 
 // Appel de la fonction productArticle / addToCart et création des constantes couleur et quantité .
 
