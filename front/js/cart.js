@@ -7,14 +7,16 @@ const ifEmptyCart = document.querySelector("#cart__items");
 
 // Création des fonctions de la page panier . -----------------------------------------------------------------------------------------------------------------------------------------
 
-// Si le panier est vide
+// getCart permet la modification du DOM de cart.html et de récupérer et d'afficher le panier .
 function getCart(){
 
-if (!localStorage.getItem("produits") || produitLocalStorage == 0) {
+// Si le panier est vide
+if (localStorage.getItem("produits") == null || !produitLocalStorage.length) {
     const emptyCart = '<p>Votre panier est vide</p>';
     ifEmptyCart.innerHTML = emptyCart;
 
-} else {
+    return;
+}
 
 for (let produits in produitLocalStorage){
 
@@ -97,7 +99,7 @@ for (let produits in produitLocalStorage){
     productSupprimer.innerHTML = "Supprimer";
 
 }
-}}
+}
 
 function getTotals(){
 
