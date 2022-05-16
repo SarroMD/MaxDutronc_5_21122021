@@ -7,6 +7,8 @@ const ifEmptyCart = document.querySelector("#cart__items");
 
 // Création des fonctions de la page panier . -----------------------------------------------------------------------------------------------------------------------------------------
 
+
+
 // getCart permet la modification du DOM de cart.html et de récupérer et d'afficher le panier .
 function getCart(){
 
@@ -17,6 +19,9 @@ if (localStorage.getItem("produits") == null || !produitLocalStorage.length) {
 
     return;
 }
+
+let productTotalPrice = document.getElementById('totalPrice');
+productTotalPrice.innerHTML = 0;
 
 for (let produits in produitLocalStorage){
 
@@ -57,10 +62,10 @@ for (let produits in produitLocalStorage){
     productTitle.appendChild(productColor);
     productColor.innerHTML = produitLocalStorage[produits].couleurProduit;
 
-    // Ajout du prix
-    let productPrice = document.createElement("p");
-    productItemContentTitlePrice.appendChild(productPrice);
-    productPrice.innerHTML = produitLocalStorage[produits].prixProduit + " €";
+        // Ajout du prix
+        let price = getPrice(produitLocalStorage[produits].idProduit);
+        let productPrice = document.createElement("p");
+        productItemContentTitlePrice.appendChild(productPrice);
 
     // Ajout de l'élément "div"
     let productItemContentSettings = document.createElement("div");
@@ -87,6 +92,20 @@ for (let produits in produitLocalStorage){
     productQuantity.setAttribute("max", "100");
     productQuantity.setAttribute("name", "itemQuantity");
 
+        let total = productTotalPrice.innerHTML;
+        console.log(total);
+        price.then(async function(resAPI) {
+            let article = await resAPI;
+            if (article) {
+            productPrice.innerHTML = article.price + " €";
+            console.log(total);
+            console.log(productQuantity.value);
+            console.log(article.price);
+            productTotalPrice.innerHTML = parseInt(total) + (productQuantity.value * article.price);
+            }
+        });
+
+
     // Ajout de l'élément "div"
     let productItemContentSettingsDelete = document.createElement("div");
     productItemContentSettings.appendChild(productItemContentSettingsDelete);
@@ -101,6 +120,21 @@ for (let produits in produitLocalStorage){
 }
 }
 
+function getPrice(idProduit){
+        var articlePrice = 0;
+        let response = fetch("http://localhost:3000/api/products/" + idProduit)
+        .then(function(res) {
+            if (res.ok) {
+            return res.json();
+            }
+        
+        });
+
+return response;
+
+}
+
+// Récupération du total des quantités et du prix total des produits du panier .
 function getTotals(){
 
     // Récupération du total des quantités -------------------------------------------------------------------------------------------------------------------------------------------
@@ -118,18 +152,17 @@ function getTotals(){
 
     // Récupération du prix total ----------------------------------------------------------------------------------------------------------------------------------------------------
 
-    totalPrice = 0;
+    /* totalPrice = 0;
 
     for (var i = 0; i < myLength; ++i) {
         totalPrice += (itemsQtt[i].value * produitLocalStorage[i].prixProduit);
     }
 
     let productTotalPrice = document.getElementById('totalPrice');
-    productTotalPrice.innerHTML = totalPrice;
+    productTotalPrice.innerHTML = totalPrice; */
 }
 
 // Modification d'éléments du panier . -----------------------------------------------------------------------------------------------------------------------------------------------
-
 function modifyCart() {
     let qttModif = document.querySelectorAll(".itemQuantity");
 
@@ -156,7 +189,6 @@ function modifyCart() {
 }
 
 // Suppression d'éléments du panier . ------------------------------------------------------------------------------------------------------------------------------------------------
-
 function deleteProduct() {
 
     let btn_supprimer = document.querySelectorAll(".deleteItem");
@@ -183,7 +215,6 @@ function deleteProduct() {
 // Passer la commande ( formulaire + regex + erreur ) . ------------------------------------------------------------------------------------------------------------------------------
 
 // Formulaire avec regex .
-
 function getForm(){
 
     // Ajout des Regex
@@ -237,6 +268,7 @@ function getForm(){
         return true;
 }
 
+// Permet d'envoyer les données du panier ( + formulaire ) à l'API .
 function postForm(event){ 
     event.preventDefault();
 

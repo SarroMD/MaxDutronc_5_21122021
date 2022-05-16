@@ -22,8 +22,7 @@ const sendCartButton = document.querySelector("#addToCart");
 sendCartButton.addEventListener("click", addToCart, false);
 
 
-// Récupérations des données de l'API .
-
+// Récupérations des données de l'API en fonction de l'ID du produit dans l'URL .
 function productArticle() {
     fetch("http://localhost:3000/api/products/" + productId)
         .then(function(res) {
@@ -33,7 +32,6 @@ function productArticle() {
         
         })
 
-        // Répartitions des données dans le DOM .
         .then(async function(resAPI) {
             let article = await resAPI;
             if (article) {
@@ -46,6 +44,7 @@ function productArticle() {
         })
 }
 
+// Répartition des données de l'API dans le DOM .
 function insertProduct(article) {
 
     // Affichage de l'image .
@@ -78,7 +77,7 @@ function insertProduct(article) {
 
 }
 
-// utilisation du panier .
+// Fonction qui permet l'ajout au panier du ou des produits choisis par l'utilisateur .
 function addToCart() {
     if (quantite.value > 0 && quantite.value <= 100) {
 
@@ -128,8 +127,12 @@ function addToCart() {
         }
 
             localStorage.setItem("produits", JSON.stringify(produitLocalStorage));
-                alert('Votre commande de '+choixQuantite+' '+title.innerHTML+' '+choixCouleur+' est ajoutée au panier');
-                window.location.href ="cart.html";
+
+                let confirmAction = confirm('Votre commande de '+choixQuantite+' '+title.innerHTML+' '+choixCouleur+' est ajoutée au panier, Souhaitez vous être redirigé vers le panier ? ');
+                if (confirmAction) {
+                    window.location.href ="cart.html";    
+                }
+
 
     } else {
 
